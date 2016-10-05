@@ -23,6 +23,7 @@ void main(string[] args) {
 
    }
 }
+import std.conv;
 
 void fun1() {
    writeln("=== fun1 sendTo receiveFrom");
@@ -33,7 +34,8 @@ void fun1() {
    sock.setOption(SocketOptionLevel.SOCKET, SocketOption.RCVTIMEO, dur!"msecs"(2000));
 
    char[2048] buffer;
-   foreach(line; stdin.byLine) {
+   foreach(lineIn; stdin.byLine) {
+      auto line = convert(to!string(lineIn));
       writeln("send ", line);
 
       sock.sendTo(line ~ '\n', addr);
@@ -53,7 +55,8 @@ void fun2() {
    socket.connect(new InternetAddress("192.168.72.3", 5025));
    socket.setOption(SocketOptionLevel.SOCKET, SocketOption.RCVTIMEO, dur!"msecs"(2000));
 
-   foreach(line; stdin.byLine) {
+   foreach(lineIn; stdin.byLine) {
+      auto line = convert(to!string(lineIn));
       writeln("send ", line);
 
       socket.send(line ~ '\n');
@@ -73,7 +76,8 @@ void fun3() {
    char[2048] buffer;
    socket.setOption(SocketOptionLevel.SOCKET, SocketOption.RCVTIMEO, dur!"msecs"(2000));
 
-   foreach(line; stdin.byLine) {
+   foreach(lineIn; stdin.byLine) {
+      auto line = convert(to!string(lineIn));
       writeln("send ", line);
 
       socket.send(line ~ '\n');
@@ -83,5 +87,13 @@ void fun3() {
       } else {
          writeln("TIMEOUT");
       }
+   }
+}
+
+string convert(string line) {
+   switch (line) {
+      case "v": return "SYST:VERS?";
+      case "l": return "data:last?";
+      default: return line;
    }
 }
