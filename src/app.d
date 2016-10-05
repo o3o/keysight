@@ -18,6 +18,9 @@ void main(string[] args) {
       }
    }  else {
       writeln("No args");
+      writeln("Use: ");
+      writeln("\tkeysight 1");
+
    }
 }
 
